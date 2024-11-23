@@ -5,6 +5,7 @@ The goal of this research project was to use bayesian statistical methods to dev
 
 Resources Used:
 * Baseballr github package
+* RStan 
 
 Questions? 
 * brady.pinter7704@gmail.com
