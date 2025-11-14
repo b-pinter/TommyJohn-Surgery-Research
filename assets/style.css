@@ -1,0 +1,137 @@
+/* General body styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* Main container */
+#react-entry-point > div {
+    max-width: 1200px;
+    margin: 0 auto;
+    background-color: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Header styling */
+h1 {
+    color: #1e3c72;
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border-bottom: 3px solid #2a5298;
+    padding-bottom: 15px;
+}
+
+/* Label styling */
+label {
+    display: block;
+    font-weight: 600;
+    color: #2a5298;
+    margin-bottom: 8px;
+    margin-top: 20px;
+    font-size: 1.1em;
+}
+
+/* Dropdown styling */
+.Select-control {
+    border: 2px solid #2a5298 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.Select-control:hover {
+    border-color: #1e3c72 !important;
+}
+
+.Select-menu-outer {
+    border: 2px solid #2a5298 !important;
+    border-radius: 8px !important;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15) !important;
+}
+
+.Select-option:hover {
+    background-color: #e8f0fe !important;
+}
+
+.Select-option.is-selected {
+    background-color: #2a5298 !important;
+    color: white !important;
+}
+
+/* Dropdown container spacing */
+#conditional_dropdown_container {
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+/* Graph styling */
+.js-plotly-plot {
+    margin-top: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Plotly modebar (toolbar) styling */
+.modebar {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    border-radius: 5px !important;
+    padding: 5px !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    #react-entry-point > div {
+        padding: 20px;
+        margin: 10px;
+    }
+
+    h1 {
+        font-size: 1.8em;
+    }
+
+    body {
+        padding: 10px;
+    }
+}
+
+/* Loading spinner customization */
+._dash-loading {
+    color: #2a5298;
+}
+
+/* Smooth transitions */
+* {
+    transition: all 0.3s ease;
+}
+
+/* Dropdown wrapper */
+.dash-dropdown {
+    margin-bottom: 15px;
+}
+
+/* Custom scrollbar for dropdowns */
+.Select-menu::-webkit-scrollbar {
+    width: 8px;
+}
+
+.Select-menu::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.Select-menu::-webkit-scrollbar-thumb {
+    background: #2a5298;
+    border-radius: 10px;
+}
+
+.Select-menu::-webkit-scrollbar-thumb:hover {
+    background: #1e3c72;
+}
