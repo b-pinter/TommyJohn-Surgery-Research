@@ -11,7 +11,7 @@ import pandas as pd
 ########################################################
 
 #Load in data (Cleaned)
-baseball_data = pd.read_csv('baseball_data.csv')
+baseball_data = pd.read_csv('data_complete.csv')
 player_list = baseball_data['player_name'].unique()
 surgery_list = baseball_data['surgery'].unique()
 #Boot up the dashboard
@@ -19,6 +19,7 @@ app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets= ['
 app.layout = html.Div(children =[
     html.H1("Pitching Viz"),
     html.Label('Select type of Pitcher:'),
+    html.Sup('0 for those who did not have Tommy John Surgery, 1 for those who had it.'),
     dcc.Dropdown(
         id = 'surgery_selection',
         options = [{'label': surgery, 'value': surgery} for surgery in surgery_list],
@@ -45,6 +46,7 @@ def conditional_visual(selected_surgery):
     surgery_players = select_filter['player_name'].unique()
     return html.Div([
         html.Label("Select Player:"),
+        html.Sup('Last,First Name'),
         dcc.Dropdown(
             id='player_dropdown',
             options=[{'label': player, 'value': player} for player in surgery_players],
