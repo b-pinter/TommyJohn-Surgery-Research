@@ -1,0 +1,5 @@
+data_complete.csv
+.venv/
+.idea/
+.DS_Store
+local/
