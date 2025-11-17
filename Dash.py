@@ -30,6 +30,8 @@ app.layout = html.Div(children =[
         dcc.Graph(id="pitch_location1"),
 
         #Second graph, sorta working
+    html.Label('Select type of Pitcher:'),
+    html.Sup('0 for those who did not have Tommy John Surgery, 1 for those who had it.'),
         dcc.Dropdown(
             id='surgery_selection2',
             options=[{'label': surgery, 'value': surgery} for surgery in surgery_list],
@@ -74,13 +76,18 @@ def conditional_visual(selected_surgery):
     ])
 
 #Second callback for the dropdown menus
+#Working for both tables (PRAY)
 @app.callback(
-    Output('pitch_location', 'figure'),
+    Output('pitch_location1', 'figure'),
     Input('player_dropdown', 'value')
 )
 
+@app.callback(
+    Output('pitch_location2', 'figure'),
+    Input('player_dropdown', 'value')
+)
 #Build the pitching visual
-#Hopefully only need one iteration of this?
+#Hopefully only need one iteration of this? (nope, working to fix..)
 def build_visual(player):
     pitching_filter = baseball_data[baseball_data['player_name'] == player]
     fig = px.scatter(
