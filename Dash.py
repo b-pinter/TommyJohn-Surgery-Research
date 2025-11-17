@@ -1,5 +1,5 @@
 #Import information
-from dash import Dash, html, dcc, Input, Output
+from dash import Dash, html, dcc, Input, Output, ctx
 import plotly.express as px
 import pandas as pd
 ################################################################################################################
@@ -40,26 +40,25 @@ app.layout = html.Div(children =[
         html.Div(id='conditional_dropdown_container2'),
         dcc.Graph(id="pitch_location2"),
     ]),
-
-    #Second plot for comparison
-    #Figure this out, might have to remove the child?
 ])
 
 #First information update for conditional portion
 @app.callback(
     Output('conditional_dropdown_container1', 'children'),
-    Input('surgery_selection1', 'value')
+    Input('surgery_selection1', 'value'),
+    prevent_initial_call=True
 
 )
 #Second callback for the other dropdown menu
 @app.callback(
     Output('conditional_dropdown_container2', 'children'),
-    Input('surgery_selection2', 'value')
+    Input('surgery_selection2', 'value'),
+    prevent_initial_call=True
+
 )
 
-#Conditional Statement for Dropdowns
 #Might need to add additional code to this so that it fully works with two side-by-side graphs
-def conditional_visual(selected_surgery):
+def conditional_visual1(selected_surgery):
     if selected_surgery == 0:
         select_filter = baseball_data[baseball_data['surgery'] == 0]
     else:
@@ -69,37 +68,71 @@ def conditional_visual(selected_surgery):
         html.Label("Select Player:"),
         html.Sup('Last,First Name'),
         dcc.Dropdown(
-            id='player_dropdown',
+            id='player_dropdown1',
             options=[{'label': player, 'value': player} for player in surgery_players],
             value=surgery_players[0]
         )
     ])
 
+def conditional_visual2(selected_surgery):
+    if selected_surgery == 0:
+        select_filter = baseball_data[baseball_data['surgery'] == 0]
+    else:
+        select_filter = baseball_data[baseball_data['surgery'] == 1]
+    surgery_players = select_filter['player_name'].unique()
+    return html.Div([
+        html.Label("Select Player:"),
+        html.Sup('Last,First Name'),
+        dcc.Dropdown(
+            id='player_dropdown2',
+            options=[{'label': player, 'value': player} for player in surgery_players],
+            value=surgery_players[0]
+        )
+    ])
+
+
 #Second callback for the dropdown menus
-#Working for both tables (PRAY)
 @app.callback(
     Output('pitch_location1', 'figure'),
-    Input('player_dropdown', 'value')
+    Input('player_dropdown1', 'value')
 )
 
 @app.callback(
     Output('pitch_location2', 'figure'),
-    Input('player_dropdown', 'value')
+    Input('player_dropdown2', 'value')
 )
-#Build the pitching visual
-#Hopefully only need one iteration of this? (nope, working to fix..)
-def build_visual(player):
+
+# Build the pitching visual
+# Hopefully only need one iteration of this? (nope, working to fix..)
+def build_visual1(player):
     pitching_filter = baseball_data[baseball_data['player_name'] == player]
     fig = px.scatter(
         pitching_filter,
-        x = 'release_pos_x',
-        y = 'plate_z',
-        color = 'pitch_name',
-        symbol = 'pitch_name',
-        title = f'Pitch Location for {player}',
-        labels = {'release_pos_x': 'Release Position X', 'plate_z' : 'Plate Z'}
+        x='release_pos_x',
+        y='plate_z',
+        color='pitch_name',
+        symbol='pitch_name',
+        title=f'Pitch Location for {player}',
+        labels={'release_pos_x': 'Release Position X', 'plate_z': 'Plate Z'}
     )
     return fig
+
+
+
+def build_visual2(player):
+    pitching_filter = baseball_data[baseball_data['player_name'] == player]
+    fig = px.scatter(
+        pitching_filter,
+        x='release_pos_x',
+        y='plate_z',
+        color='pitch_name',
+        symbol='pitch_name',
+        title=f'Pitch Location for {player}',
+        labels={'release_pos_x': 'Release Position X', 'plate_z': 'Plate Z'}
+    )
+    return fig
+
+
 
 #Running the file
 if __name__ == "__main__":
