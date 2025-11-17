@@ -55,7 +55,6 @@ app.layout = html.Div(children =[
     Input('surgery_selection2', 'value')
 )
 
-
 #Conditional Statement for Dropdowns
 #Might need to add additional code to this so that it fully works with two side-by-side graphs
 def conditional_visual(selected_surgery):
