@@ -1,4 +1,4 @@
-#Import information
+#Imports
 from dash import Dash, html, dcc, Input, Output, ctx
 import plotly.express as px
 import pandas as pd
@@ -9,6 +9,12 @@ import pandas as pd
 #Allow to see pitch types use the figure building function found below (Done)
 #Update style.css to make more pretty/color (Done)
 #Add a second plot to allow for pitcher visual comparison (Done)
+#Add pitch selection menu (Possible done for tomorrow)
+
+#What I learned
+#ORDER MATTERS
+#Time spend debugging due to dash order:
+#1.5 hours
 ################################################################################################################
 #Load in data (Cleaned)
 baseball_data = pd.read_csv('data_complete.csv')
@@ -27,9 +33,10 @@ app.layout = html.Div(children =[
             value = surgery_list[0]),
 
         html.Div(id='conditional_dropdown_container1'),
+        #html.Div(id='pitch_selection1'),
         dcc.Graph(id="pitch_location1"),
 
-        #Second graph, sorta working
+       #Second graph, all calls are below.
     html.Label('Select type of Pitcher:'),
     html.Sup('0 for those who did not have Tommy John Surgery, 1 for those who had it.'),
         dcc.Dropdown(
@@ -38,11 +45,12 @@ app.layout = html.Div(children =[
             value=surgery_list[0]),
 
         html.Div(id='conditional_dropdown_container2'),
-        dcc.Graph(id="pitch_location2"),
+        #html.Div(id='pitch_selection2'),
+        dcc.Graph(id="pitch_location2")
     ]),
 ])
 
-#First information update for conditional portion
+#First call
 @app.callback(
     Output('conditional_dropdown_container1', 'children'),
     Input('surgery_selection1', 'value'),
@@ -50,8 +58,7 @@ app.layout = html.Div(children =[
 
 )
 
-
-#Might need to add additional code to this so that it fully works with two side-by-side graphs
+#First conditional dropdown
 def conditional_visual1(selected_surgery):
     if selected_surgery == 0:
         select_filter = baseball_data[baseball_data['surgery'] == 0]
@@ -73,9 +80,9 @@ def conditional_visual1(selected_surgery):
     Output('conditional_dropdown_container2', 'children'),
     Input('surgery_selection2', 'value'),
     prevent_initial_call=True
-
 )
 
+#Second conditional dropdown
 def conditional_visual2(selected_surgery):
     if selected_surgery == 0:
         select_filter = baseball_data[baseball_data['surgery'] == 0]
@@ -92,17 +99,13 @@ def conditional_visual2(selected_surgery):
         )
     ])
 
-
 #Second callback for the dropdown menus
 @app.callback(
     Output('pitch_location1', 'figure'),
     Input('player_dropdown1', 'value')
 )
 
-
-
-# Build the pitching visual
-# Hopefully only need one iteration of this? (nope, working to fix..)
+#Visual for first dropdown
 def build_visual1(player):
     pitching_filter = baseball_data[baseball_data['player_name'] == player]
     fig = px.scatter(
@@ -116,6 +119,7 @@ def build_visual1(player):
     )
     return fig
 
+#Visual and call for second dropdown
 @app.callback(
     Output('pitch_location2', 'figure'),
     Input('player_dropdown2', 'value')
@@ -123,6 +127,13 @@ def build_visual1(player):
 
 def build_visual2(player):
     pitching_filter = baseball_data[baseball_data['player_name'] == player]
+    #Working on
+    #pitches_thrown = pitching_filter['pitch_name'].unique()
+    #dcc.Dropdown(
+    #    id='pitch_selection2',
+    #    options=[{'label': pitch, 'value': pitch} for pitch in pitches_thrown],
+    #    multi=True
+    #)
     fig = px.scatter(
         pitching_filter,
         x='release_pos_x',
@@ -134,8 +145,5 @@ def build_visual2(player):
     )
     return fig
 
-
-
 #Running the file
-if __name__ == "__main__":
-    app.run(debug=True, port=8050)
+app.run(debug = True)

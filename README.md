@@ -18,8 +18,6 @@ Included in this repository:
     * Programming using plotly dash
 
 Resources Used:
-* Baseballr github package
+* BaseballR
 * RStan
-
-Questions?
-* brady.pinter7704@gmail.com
+* Plotly Dash
