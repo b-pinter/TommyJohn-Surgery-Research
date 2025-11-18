@@ -8,7 +8,7 @@ import pandas as pd
 #Seperate by pitchers who/who not have had surgery (Done)
 #Allow to see pitch types use the figure building function found below (Done)
 #Update style.css to make more pretty/color (Done)
-#Add a second plot to allow for pitcher visual comparison (Sorta works, need to sort out issues with function calling and duplicates)
+#Add a second plot to allow for pitcher visual comparison (Done)
 ################################################################################################################
 #Load in data (Cleaned)
 baseball_data = pd.read_csv('data_complete.csv')
@@ -49,13 +49,7 @@ app.layout = html.Div(children =[
     prevent_initial_call=True
 
 )
-#Second callback for the other dropdown menu
-@app.callback(
-    Output('conditional_dropdown_container2', 'children'),
-    Input('surgery_selection2', 'value'),
-    prevent_initial_call=True
 
-)
 
 #Might need to add additional code to this so that it fully works with two side-by-side graphs
 def conditional_visual1(selected_surgery):
@@ -73,6 +67,14 @@ def conditional_visual1(selected_surgery):
             value=surgery_players[0]
         )
     ])
+
+#Second callback for the other dropdown menu
+@app.callback(
+    Output('conditional_dropdown_container2', 'children'),
+    Input('surgery_selection2', 'value'),
+    prevent_initial_call=True
+
+)
 
 def conditional_visual2(selected_surgery):
     if selected_surgery == 0:
@@ -97,10 +99,7 @@ def conditional_visual2(selected_surgery):
     Input('player_dropdown1', 'value')
 )
 
-@app.callback(
-    Output('pitch_location2', 'figure'),
-    Input('player_dropdown2', 'value')
-)
+
 
 # Build the pitching visual
 # Hopefully only need one iteration of this? (nope, working to fix..)
@@ -117,7 +116,10 @@ def build_visual1(player):
     )
     return fig
 
-
+@app.callback(
+    Output('pitch_location2', 'figure'),
+    Input('player_dropdown2', 'value')
+)
 
 def build_visual2(player):
     pitching_filter = baseball_data[baseball_data['player_name'] == player]
