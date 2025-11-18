@@ -146,4 +146,5 @@ def build_visual2(player):
     return fig
 
 #Running the file
-app.run(debug = True)
+if __name__ == '__main__':
+    app.run_server(debug=False)
