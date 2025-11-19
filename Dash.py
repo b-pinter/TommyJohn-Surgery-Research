@@ -102,7 +102,8 @@ def conditional_visual2(selected_surgery):
 #Second callback for the dropdown menus
 @app.callback(
     Output('pitch_location1', 'figure'),
-    Input('player_dropdown1', 'value')
+    Input('player_dropdown1', 'value'),
+    prevent_initial_call=True
 )
 
 #Visual for first dropdown
@@ -122,7 +123,8 @@ def build_visual1(player):
 #Visual and call for second dropdown
 @app.callback(
     Output('pitch_location2', 'figure'),
-    Input('player_dropdown2', 'value')
+    Input('player_dropdown2', 'value'),
+    prevent_initial_call=True
 )
 
 def build_visual2(player):
