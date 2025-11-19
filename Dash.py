@@ -146,7 +146,7 @@ def build_visual2(player):
     return fig
 
 #Running the file
-server = Dash.server
+server = app.server
 
 if __name__ == '__main__':
     app.run(debug=False, host = '0.0.0.0', port = 8050)
