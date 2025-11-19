@@ -17,7 +17,7 @@ import pandas as pd
 #1.5 hours
 ################################################################################################################
 #Load in data (Cleaned)
-baseball_data = pd.read_csv('data_complete.csv')
+baseball_data = pd.read_parquet('data_complete.parquet')
 player_list = baseball_data['player_name'].unique()
 surgery_list = baseball_data['surgery'].unique()
 #Boot up the dashboard
