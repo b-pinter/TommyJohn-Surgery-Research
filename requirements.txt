@@ -1,5 +1,6 @@
-
+pyarrow
 dash
 plotly
 pandas
 gunicorn
+fastparquet
