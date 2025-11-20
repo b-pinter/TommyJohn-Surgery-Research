@@ -1,10 +1,10 @@
 #Imports
-import os
-os.environ['DASH_SERVE_LOCALLY'] = 'True'
+#import os
+#os.environ['DASH_SERVE_LOCALLY'] = 'True'
 
-from dash import Dash, html, dcc, Input, Output, ctx
-import plotly.express as px
-import pandas as pd
+#from dash import Dash, html, dcc, Input, Output, ctx
+#import plotly.express as px
+#import pandas as pd
 ################################################################################################################
 #TO DO
 #Add in conditional statements for the dropdown menu (Done)
@@ -20,11 +20,52 @@ import pandas as pd
 #1.5 hours
 ################################################################################################################
 #Load in data (Cleaned)
-baseball_data = pd.read_parquet('data_complete.parquet')
-player_list = baseball_data['player_name'].unique()
-surgery_list = baseball_data['surgery'].unique()
+#baseball_data = pd.read_parquet('data_complete.parquet')
+#player_list = baseball_data['player_name'].unique()
+#surgery_list = baseball_data['surgery'].unique()
+import sys
+import os
+
+print("=" * 50)
+print("STARTING APPLICATION")
+print(f"Python version: {sys.version}")
+print(f"Current directory: {os.getcwd()}")
+print(f"Files in directory: {os.listdir('.')}")
+print("=" * 50)
+
+os.environ['DASH_SERVE_LOCALLY'] = 'True'
+
+from dash import Dash, html, dcc, Input, Output
+import plotly.express as px
+import pandas as pd
+
+print("Imports successful")
+
+# Load data
+try:
+    print("Attempting to load data_complete.parquet...")
+    baseball_data = pd.read_parquet('data_complete.parquet')
+    print(f"✓ SUCCESS: Data loaded with {len(baseball_data)} rows")
+    surgery_list = sorted(baseball_data['surgery'].unique())
+    print(f"✓ Surgery types: {surgery_list}")
+except Exception as e:
+    print(f"✗ FAILED TO LOAD DATA: {e}")
+    import traceback
+    traceback.print_exc()
+    # Create dummy data so app doesn't crash
+    baseball_data = pd.DataFrame({
+        'player_name': ['No Data'],
+        'surgery': [0],
+        'release_pos_x': [0],
+        'plate_z': [0],
+        'pitch_name': ['None']
+    })
+    surgery_list = [0, 1]
+
+print("Creating Dash app...")
 #Boot up the dashboard
 app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets= ['style.css'])
+server = app.server
 app.layout = html.Div(children =[
     html.H1("Pitching Viz"),
     html.Label('Select type of Pitcher:'),
@@ -150,7 +191,5 @@ def build_visual2(player):
     return fig
 
 #Running the file
-server = app.server
-
 if __name__ == '__main__':
     app.run(debug=False, host = '0.0.0.0', port = 8050)
