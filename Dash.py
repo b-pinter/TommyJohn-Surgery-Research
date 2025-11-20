@@ -54,8 +54,7 @@ app.layout = html.Div(children =[
 @app.callback(
     Output('conditional_dropdown_container1', 'children'),
     Input('surgery_selection1', 'value'),
-    prevent_initial_call=True
-
+    #prevent_initial_call=True
 )
 
 #First conditional dropdown
@@ -79,7 +78,7 @@ def conditional_visual1(selected_surgery):
 @app.callback(
     Output('conditional_dropdown_container2', 'children'),
     Input('surgery_selection2', 'value'),
-    prevent_initial_call=True
+    #prevent_initial_call=True
 )
 
 #Second conditional dropdown
