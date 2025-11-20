@@ -1,6 +1,6 @@
 #Imports
 #import os
-#os.environ['DASH_SERVE_LOCALLY'] = 'True'
+
 
 #from dash import Dash, html, dcc, Input, Output, ctx
 #import plotly.express as px
@@ -33,7 +33,7 @@ print(f"Current directory: {os.getcwd()}")
 print(f"Files in directory: {os.listdir('.')}")
 print("=" * 50)
 
-os.environ['DASH_SERVE_LOCALLY'] = 'True'
+#os.environ['DASH_SERVE_LOCALLY'] = 'True'
 
 from dash import Dash, html, dcc, Input, Output
 import plotly.express as px
