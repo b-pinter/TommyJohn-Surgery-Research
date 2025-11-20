@@ -46,7 +46,7 @@ try:
     print("Attempting to load data_complete.parquet...")
     baseball_data = pd.read_parquet('data_complete.parquet')
     print(f"✓ SUCCESS: Data loaded with {len(baseball_data)} rows")
-    surgery_list = sorted(baseball_data['surgery'].unique())
+    surgery_list = [int(x) for x in sorted(baseball_data['surgery'].unique())]
     print(f"✓ Surgery types: {surgery_list}")
 except Exception as e:
     print(f"✗ FAILED TO LOAD DATA: {e}")
