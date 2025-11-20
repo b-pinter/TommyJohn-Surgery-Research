@@ -98,7 +98,7 @@ app.layout = html.Div(children =[
 @app.callback(
     Output('conditional_dropdown_container1', 'children'),
     Input('surgery_selection1', 'value'),
-    prevent_initial_call=True
+    #prevent_initial_call=True
 )
 
 #First conditional dropdown
@@ -122,7 +122,7 @@ def conditional_visual1(selected_surgery):
 @app.callback(
     Output('conditional_dropdown_container2', 'children'),
     Input('surgery_selection2', 'value'),
-    prevent_initial_call=True
+    #prevent_initial_call=True
 )
 
 #Second conditional dropdown
@@ -146,7 +146,7 @@ def conditional_visual2(selected_surgery):
 @app.callback(
     Output('pitch_location1', 'figure'),
     Input('player_dropdown1', 'value'),
-    prevent_initial_call=True
+    #prevent_initial_call=True
 )
 
 #Visual for first dropdown
@@ -167,7 +167,7 @@ def build_visual1(player):
 @app.callback(
     Output('pitch_location2', 'figure'),
     Input('player_dropdown2', 'value'),
-    prevent_initial_call=True
+    #prevent_initial_call=True
 )
 
 def build_visual2(player):
@@ -192,5 +192,5 @@ def build_visual2(player):
 
 #Running the file
 if __name__ == '__main__':
-    app.run(debug=False, host = '0.0.0.0', port = 8050)
+    app.run(debug=True, host = '0.0.0.0', port = 8050)
 
