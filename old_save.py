@@ -1,7 +1,10 @@
 #Imports
-from dash import Dash, html, dcc, Input, Output, ctx
-import plotly.express as px
-import pandas as pd
+#import os
+#os.environ['DASH_SERVE_LOCALLY'] = 'True'
+
+#from dash import Dash, html, dcc, Input, Output, ctx
+#import plotly.express as px
+#import pandas as pd
 ################################################################################################################
 #TO DO
 #Add in conditional statements for the dropdown menu (Done)
@@ -17,11 +20,52 @@ import pandas as pd
 #1.5 hours
 ################################################################################################################
 #Load in data (Cleaned)
-baseball_data = pd.read_parquet('data_complete.parquet')
-player_list = baseball_data['player_name'].unique()
-surgery_list = baseball_data['surgery'].unique()
+#baseball_data = pd.read_parquet('data_complete.parquet')
+#player_list = baseball_data['player_name'].unique()
+#surgery_list = baseball_data['surgery'].unique()
+import sys
+import os
+
+print("=" * 50)
+print("STARTING APPLICATION")
+print(f"Python version: {sys.version}")
+print(f"Current directory: {os.getcwd()}")
+print(f"Files in directory: {os.listdir('.')}")
+print("=" * 50)
+
+os.environ['DASH_SERVE_LOCALLY'] = 'True'
+
+from dash import Dash, html, dcc, Input, Output
+import plotly.express as px
+import pandas as pd
+
+print("Imports successful")
+
+# Load data
+try:
+    print("Attempting to load data_complete.parquet...")
+    baseball_data = pd.read_parquet('data_complete.parquet')
+    print(f"✓ SUCCESS: Data loaded with {len(baseball_data)} rows")
+    surgery_list = [int(x) for x in sorted(baseball_data['surgery'].unique())]
+    print(f"✓ Surgery types: {surgery_list}")
+except Exception as e:
+    print(f"✗ FAILED TO LOAD DATA: {e}")
+    import traceback
+    traceback.print_exc()
+    # Create dummy data so app doesn't crash
+    baseball_data = pd.DataFrame({
+        'player_name': ['No Data'],
+        'surgery': [0],
+        'release_pos_x': [0],
+        'plate_z': [0],
+        'pitch_name': ['None']
+    })
+    surgery_list = [0, 1]
+
+print("Creating Dash app...")
 #Boot up the dashboard
 app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets= ['style.css'])
+server = app.server
 app.layout = html.Div(children =[
     html.H1("Pitching Viz"),
     html.Label('Select type of Pitcher:'),
@@ -55,7 +99,6 @@ app.layout = html.Div(children =[
     Output('conditional_dropdown_container1', 'children'),
     Input('surgery_selection1', 'value'),
     prevent_initial_call=True
-
 )
 
 #First conditional dropdown
@@ -81,6 +124,75 @@ def conditional_visual1(selected_surgery):
     Input('surgery_selection2', 'value'),
     prevent_initial_call=True
 )
+
+#Second conditional dropdown
+def conditional_visual2(selected_surgery):
+    if selected_surgery == 0:
+        select_filter = baseball_data[baseball_data['surgery'] == 0]
+    else:
+        select_filter = baseball_data[baseball_data['surgery'] == 1]
+    surgery_players = select_filter['player_name'].unique()
+    return html.Div([
+        html.Label("Select Player:"),
+        html.Sup('Last,First Name'),
+        dcc.Dropdown(
+            id='player_dropdown2',
+            options=[{'label': player, 'value': player} for player in surgery_players],
+            value=surgery_players[0]
+        )
+    ])
+
+#Second callback for the dropdown menus
+@app.callback(
+    Output('pitch_location1', 'figure'),
+    Input('player_dropdown1', 'value'),
+    prevent_initial_call=True
+)
+
+#Visual for first dropdown
+def build_visual1(player):
+    pitching_filter = baseball_data[baseball_data['player_name'] == player]
+    fig = px.scatter(
+        pitching_filter,
+        x='release_pos_x',
+        y='plate_z',
+        color='pitch_name',
+        symbol='pitch_name',
+        title=f'Pitch Location for {player}',
+        labels={'release_pos_x': 'Release Position X', 'plate_z': 'Plate Z'}
+    )
+    return fig
+
+#Visual and call for second dropdown
+@app.callback(
+    Output('pitch_location2', 'figure'),
+    Input('player_dropdown2', 'value'),
+    prevent_initial_call=True
+)
+
+def build_visual2(player):
+    pitching_filter = baseball_data[baseball_data['player_name'] == player]
+    #Working on
+    #pitches_thrown = pitching_filter['pitch_name'].unique()
+    #dcc.Dropdown(
+    #    id='pitch_selection2',
+    #    options=[{'label': pitch, 'value': pitch} for pitch in pitches_thrown],
+    #    multi=True
+    #)
+    fig = px.scatter(
+        pitching_filter,
+        x='release_pos_x',
+        y='plate_z',
+        color='pitch_name',
+        symbol='pitch_name',
+        title=f'Pitch Location for {player}',
+        labels={'release_pos_x': 'Release Position X', 'plate_z': 'Plate Z'}
+    )
+    return fig
+
+#Running the file
+if __name__ == '__main__':
+    app.run(debug=False, host = '0.0.0.0', port = 8050)
 
 #Second conditional dropdown
 def conditional_visual2(selected_surgery):
