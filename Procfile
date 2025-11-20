@@ -1,1 +1,1 @@
-web: gunicorn app:server
+web: gunicorn Dash:server --timeout 120 --log-level debug

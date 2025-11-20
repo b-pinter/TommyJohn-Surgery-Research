@@ -1,6 +1,6 @@
-pyarrow
 dash
 plotly
 pandas
 gunicorn
+pyarrow
 fastparquet
