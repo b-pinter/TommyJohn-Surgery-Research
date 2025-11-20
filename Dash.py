@@ -1,4 +1,7 @@
 #Imports
+import os
+os.environ['DASH_SERVE_LOCALLY'] = 'True'
+
 from dash import Dash, html, dcc, Input, Output, ctx
 import plotly.express as px
 import pandas as pd
