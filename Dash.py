@@ -14,7 +14,7 @@ print("=" * 60, file=sys.stderr)
 baseball_data = pd.read_parquet('data_complete.parquet')
 print(f"Data loaded: {len(baseball_data)} rows", file=sys.stderr)
 
-app = Dash(__name__, suppress_callback_exceptions=True
+app = Dash(__name__, suppress_callback_exceptions=True)
 server = app.server
 
 app.layout = html.Div([
