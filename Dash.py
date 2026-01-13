@@ -1,10 +1,7 @@
 #Imports
-#import os
-
-
-#from dash import Dash, html, dcc, Input, Output, ctx
-#import plotly.express as px
-#import pandas as pd
+from dash import Dash, html, dcc, Input, Output, ctx
+import plotly.express as px
+import pandas as pd
 ################################################################################################################
 #TO DO
 #Add in conditional statements for the dropdown menu (Done)
@@ -23,9 +20,9 @@
 #baseball_data = pd.read_parquet('data_complete.parquet')
 #player_list = baseball_data['player_name'].unique()
 #surgery_list = baseball_data['surgery'].unique()
+
 import sys
 import os
-
 print("=" * 50)
 print("STARTING APPLICATION")
 print(f"Python version: {sys.version}")
@@ -62,7 +59,6 @@ except Exception as e:
     })
     surgery_list = [0, 1]
 
-print("Creating Dash app...")
 #Boot up the dashboard
 app = Dash(__name__, suppress_callback_exceptions=True, external_stylesheets= ['style.css'])
 server = app.server
@@ -100,9 +96,8 @@ app.layout = html.Div(children =[
     Input('surgery_selection1', 'value'),
     #prevent_initial_call=True
 )
-
-#First conditional dropdown
 def conditional_visual1(selected_surgery):
+    # First conditional dropdown
     if selected_surgery == 0:
         select_filter = baseball_data[baseball_data['surgery'] == 0]
     else:
@@ -124,9 +119,8 @@ def conditional_visual1(selected_surgery):
     Input('surgery_selection2', 'value'),
     #prevent_initial_call=True
 )
-
-#Second conditional dropdown
 def conditional_visual2(selected_surgery):
+    # Second conditional dropdown
     if selected_surgery == 0:
         select_filter = baseball_data[baseball_data['surgery'] == 0]
     else:
