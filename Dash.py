@@ -35,15 +35,17 @@ print("=" * 50)
 from dash import Dash, html, dcc, Input, Output
 import plotly.express as px
 import pandas as pd
+import polars as pl
 
 print("Imports successful")
 
 # Load data
 try:
     print("Attempting to load data_complete.parquet...")
-    baseball_data = pd.read_parquet('data_complete.parquet')
-    print(f"✓ SUCCESS: Data loaded with {len(baseball_data)} rows")
-    surgery_list = [int(x) for x in sorted(baseball_data['surgery'].unique())]
+    baseball_data = pl.scan_parquet('data_complete.parquet')
+    print(f"✓ SUCCESS: Data lazily loaded with {baseball_data.select(pl.len()).collect().item()} rows")
+    unique_surgeries = baseball_data.select("surgery").unique().collect()
+    surgery_list = sorted(unique_surgeries["surgery"].to_list())
     print(f"✓ Surgery types: {surgery_list}")
 except Exception as e:
     print(f"✗ FAILED TO LOAD DATA: {e}")
@@ -99,10 +101,10 @@ app.layout = html.Div(children =[
 def conditional_visual1(selected_surgery):
     # First conditional dropdown
     if selected_surgery == 0:
-        select_filter = baseball_data[baseball_data['surgery'] == 0]
+        select_filter =baseball_data.filter(pl.col("surgery") == 1).select("player_name").unique().collect()
     else:
-        select_filter = baseball_data[baseball_data['surgery'] == 1]
-    surgery_players = select_filter['player_name'].unique()
+        select_filter = baseball_data.filter(pl.col("surgery") == 1).select("player_name").unique().collect()
+    surgery_players = select_filter['player_name'].to_list()
     return html.Div([
         html.Label("Select Player:"),
         html.Sup('Last,First Name'),
@@ -122,10 +124,10 @@ def conditional_visual1(selected_surgery):
 def conditional_visual2(selected_surgery):
     # Second conditional dropdown
     if selected_surgery == 0:
-        select_filter = baseball_data[baseball_data['surgery'] == 0]
+        select_filter =baseball_data.filter(pl.col("surgery") == 1).select("player_name").unique().collect()
     else:
-        select_filter = baseball_data[baseball_data['surgery'] == 1]
-    surgery_players = select_filter['player_name'].unique()
+        select_filter = baseball_data.filter(pl.col("surgery") == 1).select("player_name").unique().collect()
+    surgery_players = select_filter['player_name'].to_list()
     return html.Div([
         html.Label("Select Player:"),
         html.Sup('Last,First Name'),
@@ -145,7 +147,7 @@ def conditional_visual2(selected_surgery):
 
 #Visual for first dropdown
 def build_visual1(player):
-    pitching_filter = baseball_data[baseball_data['player_name'] == player]
+    pitching_filter = baseball_data.filter(pl.col("player_name") == player).select("release_pos_x", "plate_z", "pitch_name").collect()
     fig = px.scatter(
         pitching_filter,
         x='release_pos_x',
@@ -165,7 +167,7 @@ def build_visual1(player):
 )
 
 def build_visual2(player):
-    pitching_filter = baseball_data[baseball_data['player_name'] == player]
+    pitching_filter = baseball_data.filter(pl.col("player_name") == player).select("release_pos_x", "plate_z", "pitch_name").collect()
     #Working on
     #pitches_thrown = pitching_filter['pitch_name'].unique()
     #dcc.Dropdown(
